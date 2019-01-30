@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0" />
+    <link type="text/css" rel="stylesheet" href="dist/css/app.css">
+</head>
+<body class="grid">
+
+    <section class="top">
+        <h1>Snip</h1>
+        <button id="save">Save</button>
+    </section>
+    
+    <section class="editors tabbed">
+        
+        <div class="editor-container html">
+            <div class="editor" id="editor-html"></div>
+        </div>
+
+        <div class="editor-container css">
+            <div class="editor" id="editor-css"></div>
+        </div>
+
+        <div class="editor-container javascript">
+            <div class="editor" id="editor-javascript"></div>
+        </div>
+
+        <div class="editor-container javascript">
+            <iframe src="https://kilolima.dk" frameborder="0"></iframe>
+        </div>
+
+    </section>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.2/ace.js"></script>
+
+    <script src="dist/js/app.js"></script>
+</body>
+</html>

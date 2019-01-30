@@ -1,0 +1,65 @@
+@import 'lib/normalize';
+@import 'layouts/tabbed';
+@import 'layouts/grid';
+@import '_vars.scss';
+
+@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro');
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+    font-family: sans-serif;
+    font-size: 14px;
+}
+
+.top {
+    background-color: $color-bg;
+    height: 40px;
+    padding: 0 5px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+
+    h1 {
+        font-family: $font-monospace;
+        color: #ccc;
+        margin: 0;
+        font-size: 26px;
+        text-shadow: -2px 2px 2px $color-dark;
+    }
+
+    button {
+        -webkit-appearance: none;
+        background-color: $color-dark;
+        color: #ccc;
+        padding: 0 20px;
+        border: none;
+        height: 30px;
+        font-weight: normal;
+
+        &:hover {
+            box-shadow: 0 0 10px $color-dark;
+        }
+    }
+}
+
+.editors {
+    width: 100%;
+    height: calc(100% - 40px);
+}
+
+.editor-container {
+    height: 100%;
+
+    .editor, iframe {
+        width: 100%;
+        height: 100%;
+    }
+
+    .editor {
+        font-size: 15px;
+        font-family: $font-monospace;
+    }
+}

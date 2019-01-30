@@ -1,0 +1,14 @@
+body.grid {
+    
+    .editors {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+
+        .editor-container {
+            height: 50%;
+            width: 50%;
+        }
+    }
+
+}
