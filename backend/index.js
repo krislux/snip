@@ -3,38 +3,81 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const randomstring = require('randomstring');
+const fs = require('fs');
 const db = require('./inc/db.js');
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json({ type: 'application/json' }));
 
-db.open().then(console.log);
+/**
+ * Return data from specific snip set by :id as JSON
+ */
+app.get('/get/:id', async (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
 
-app.get('/get/:id', async (req, res, next) => {
     db.open().then(db => {
-        db.each('SELECT rowid, * FROM snips', (err, row) => {
-            console.log(row);
+        let stmt = db.prepare('SELECT * FROM snips WHERE id=?');
+        stmt.get(req.params.id, (err, row) => {
+            res.send({
+                html: row.html,
+                css: row.css,
+                javascript: row.javascript
+            });
         });
     });
-
-    res.send(req.params.id);
 });
 
-app.post('/save/:id?', async (req, res, next) => {
-    // if (req.params.id)
-    
-    db.open().then(db => {
-        let token = randomstring.generate(7);
+/**
+ * Similar to /get, but returns a rendered HTML page for preview
+ * from a specific snip :id instead of JSON data.
+ */
+app.get('/render/:id', async(req, res) => {
+    res.setHeader('Content-Type', 'text/html');
 
-        let stmt = db.prepare('INSERT INTO snips (token, html, css, javascript) VALUES (?, ?, ?, ?)');
+    db.open().then(db => {
+        let stmt = db.prepare('SELECT * FROM snips WHERE id=?');
+        stmt.get(req.params.id, (err, row) => {
+            if (err)
+                res.end('Error');
+
+            fs.readFile('backend/template.html', (err, data) => {
+                let html = data.toString();
+                if (!err) {
+                    html = html.replace('#html#', row.html);
+                    html = html.replace('#css#', row.css);
+                    html = html.replace('#javascript#', row.javascript);
+
+                    res.end(html);
+                }
+            });
+        });
+    });
+});
+
+/**
+ * Save new snip, or update existing if :id provided.
+ */
+app.post('/save/:id?', async (req, res) => {
+    // if (req.params.id)
+
+    db.open().then(db => {
+        let id = randomstring.generate(7);
+
+        let stmt = db.prepare('INSERT INTO snips (id, html, css, javascript) VALUES (?, ?, ?, ?)');
         stmt.run(
-            token,
+            id,
             req.body.html,
             req.body.css,
             req.body.javascript
         );
-        stmt.finalize();
+        stmt.finalize(err => {
+            res.setHeader('Content-Type', 'application/json');
+            res.send({
+                success: !err,
+                id: id
+            });
+        });
     });
 });
 

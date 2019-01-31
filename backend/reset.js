@@ -15,23 +15,38 @@ console.log('Are you sure you wish to reset the project?\nThis will wipe the db.
 let stdin = process.openStdin();
 stdin.addListener('data', data => {
     if (data.toString().trim() === 'yes') {
+        
+        let fs = require('fs');
+        try {
+            fs.mkdirSync(process.env.DB_DIR, {
+                recursive: true,
+                mode: 0o744
+            });
+        } catch (exc) { /* we don't care if it exists. */ }
+
         db.open().then(db => {
             db.serialize(() => {
                 db.run('DROP TABLE IF EXISTS snips');
 
                 db.run(`CREATE TABLE snips (
-                    token BINARY CHAR(7) PRIMARY KEY,
+                    id BINARY CHAR(7) PRIMARY KEY,
                     html TEXT,
                     css TEXT,
                     javascript TEXT
-                )`);
+                )`, err => {
+                    if (err === null) {
+                        console.log('Done. Database reset.');
+                    }
+                    else {
+                        console.log('Error: ', err);
+                        process.exitCode = 1;
+                    }
+                    process.exit();
+                });
             });
-
-            console.log('Done. Database reset.');
-            process.exit();
         });
     }
     else {
-        process.exit(0);
+        process.exit();
     }
 });
