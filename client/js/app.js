@@ -45,7 +45,6 @@ types.forEach(type => {
                 alert('Something went wrong.');
             }
         });
-
     });
 });
 
