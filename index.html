@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title></title>
     <meta charset="UTF-8">
@@ -10,7 +10,10 @@
 
     <section class="top">
         <h1>Snip</h1>
-        <button class="btn-save">Save</button>
+        <div>
+            <button class="btn-update"">Update</button>
+            <button class="btn-save" data-permanent="true">Save</button>
+        </div>
     </section>
     
     <section class="editors tabbed">
@@ -28,7 +31,8 @@
         </div>
 
         <div class="editor-container javascript">
-            <iframe id="editor-preview" src="about:blank" frameborder="0"></iframe>
+            <!-- <iframe id="editor-preview" src="about:blank" frameborder="0"></iframe> -->
+            <div id="shadow"></div>
         </div>
 
     </section>

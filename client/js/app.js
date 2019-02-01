@@ -1,15 +1,16 @@
 'use strict';
 /* eslint-env browser */
-/* global ace, editors */
+/* global ace, editors, backend */
 require('../sass/main.scss');
 
-import ajax from './lib/ajax.js';
+import Action from './action.js';
+import $ from './helpers.js';
+import Shadow from './shadow.js';
 
 window.editors = {};
+window.backend = '//localhost:8222';
 
 let types = ['html', 'css', 'javascript'];
-
-let backend = '//localhost:8222';
 
 /**
  * Initialize all editors
@@ -21,31 +22,24 @@ types.forEach(type => {
     editors[type] = editor;
 });
 
+const shadow = new Shadow(document.getElementById('shadow'));
+
 /**
- * Saving
+ * Save button(s) pressed
  */
-[].forEach.call(document.querySelectorAll('.btn-save'), $el => {
-    $el.addEventListener('click', () => {
-
-        let data = {};
-        types.forEach(i => {
-            data[i] = editors[i].session.getValue();
-        });
-
-        ajax({
-            url: backend + '/save',
-            contentType: 'application/json',
-            method: 'post',
-            data: data
-        }).then(res => {
-            if (res.responseJSON && res.responseJSON.success) {
-                history.pushState(null, null, '#/' + res.responseJSON.id);
-            }
-            else {
-                alert('Something went wrong.');
-            }
-        });
+$.on('.btn-save', 'click', () => {
+    // Perma-save (with visible id and pushState) as opposed to the invisible update.
+    // let perma = /^(yes|true|1|on)$/i.test(el.target.getAttribute('data-permanent'));
+    let data = {};
+    types.forEach(i => {
+        data[i] = editors[i].session.getValue();
     });
+    
+    Action.save(data);
+});
+
+$.on('.btn-update', 'click', () => {
+    shadow.update();
 });
 
 /**
@@ -53,16 +47,11 @@ types.forEach(type => {
  */
 if (location.hash) {
     let id = location.hash.match(/#\/(\w{7})/)[1];
-    ajax({
-        url: backend + '/get/' + id,
-        contentType: 'application/json',
-        method: 'get'
-    }).then(res => {
-        if (res.responseJSON) {
-            types.forEach(i => {
-                editors[i].session.setValue(res.responseJSON[i]);
-            });
-            document.getElementById('editor-preview').src = backend + '/render/' + id;
-        }
+    
+    Action.load(id, res => {
+        types.forEach(i => {
+            editors[i].session.setValue(res.responseJSON[i]);
+        });
+        document.getElementById('editor-preview').src = backend + '/render/' + id;
     });
 }
