@@ -5,7 +5,6 @@ require('../sass/main.scss');
 
 import Action from './action.js';
 import $ from './helpers.js';
-import Shadow from './shadow.js';
 
 window.editors = {};
 window.backend = '//localhost:8222';
@@ -22,24 +21,20 @@ types.forEach(type => {
     editors[type] = editor;
 });
 
-const shadow = new Shadow(document.getElementById('shadow'));
-
 /**
  * Save button(s) pressed
  */
-$.on('.btn-save', 'click', () => {
+$.on('.btn-save', 'click', el => {
     // Perma-save (with visible id and pushState) as opposed to the invisible update.
-    // let perma = /^(yes|true|1|on)$/i.test(el.target.getAttribute('data-permanent'));
-    let data = {};
+    let permanent = /^(yes|true|1|on)$/i.test(el.target.getAttribute('data-permanent'));
+    let data = {
+        permanent: !!permanent
+    };
     types.forEach(i => {
         data[i] = editors[i].session.getValue();
     });
     
     Action.save(data);
-});
-
-$.on('.btn-update', 'click', () => {
-    shadow.update();
 });
 
 /**
