@@ -8,7 +8,8 @@
     "reset": "node backend/reset.js",
     "watch": "webpack --watch",
     "dev": "webpack --mode=development",
-    "prod": "webpack --mode=production"
+    "prod": "webpack --mode=production",
+    "dev-start": "php -S localhost:8000 &\nnpm run watch &\nnodemon"
   },
   "author": "Kris Lux <mail@kilolima.dk>",
   "license": "proprietary",
