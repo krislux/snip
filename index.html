@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title></title>
     <meta charset="UTF-8">
@@ -10,11 +10,14 @@
 
     <section class="top">
         <h1>Snip</h1>
-        <button class="btn-save">Save</button>
+        <div>
+            <button class="btn-save">Update</button>
+            <button class="btn-save" data-permanent="true">Save</button>
+        </div>
     </section>
-
+    
     <section class="editors tabbed">
-
+        
         <div class="editor-container html">
             <div class="editor" id="editor-html"></div>
         </div>
@@ -32,9 +35,9 @@
         </div>
 
     </section>
-
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.2/ace.js"></script>
-
+    
     <script src="dist/js/app.js"></script>
 </body>
 </html>

@@ -18,5 +18,10 @@ rules:
   semi:
     - error
     - always
-globals:
-  require: false
+  no-unused-vars:
+    - warn
+  no-unused-expressions:
+    - warn
+  eol-last:
+    - error
+    - always
