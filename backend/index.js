@@ -49,7 +49,7 @@ app.get('/render/:id', async(req, res) => {
 
             fs.readFile('backend/template.html', (err, data) => {
                 let html = data.toString();
-                if (!err) {
+                if ( ! err) {
                     html = html.replace('#html#', row.html);
                     html = html.replace('#css#', row.css);
                     html = html.replace('#javascript#', row.javascript);

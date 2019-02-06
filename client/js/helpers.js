@@ -6,3 +6,22 @@ export default class $ {
         });
     }
 }
+
+$.on('.toggle', 'click', event => {
+    let targets = event.target.getAttribute('data-target');
+    if (targets) {
+        targets = document.querySelectorAll(targets);
+    }
+    else {
+        targets = [event.target.nextElementSibling];
+    }
+
+    for (let i = 0; i < targets.length; i++) {
+        if (window.getComputedStyle(targets[i]).display != 'none') {
+            targets[i].style.display = 'none';
+        }
+        else {
+            targets[i].style.display = 'block';
+        }
+    }
+});

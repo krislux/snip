@@ -26,6 +26,19 @@ stdin.addListener('data', data => {
 
         db.open().then(db => {
             db.serialize(() => {
+                db.run('DROP TABLE IF EXISTS users');
+
+                db.run(`CREATE TABLE users (
+                    username CHAR(60),
+                    password CHAR(60),
+                    created_at DATETIME,
+                    CONSTRAINT unique_username UNIQUE (username)
+                )`, err => {
+                    if (err !== null) {
+                        console.log('Could not create users table.', err);
+                    }
+                });
+
                 db.run('DROP TABLE IF EXISTS snips');
 
                 db.run(`CREATE TABLE snips (

@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node backend/index.js",
     "reset": "node backend/reset.js",
+    "adduser": "node backend/adduser.js",
     "watch": "webpack --watch",
     "dev": "webpack --mode=development",
     "prod": "webpack --mode=production",
@@ -32,6 +33,7 @@
     ]
   },
   "dependencies": {
+    "bcrypt": "^3.0.3",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "dotenv": "^6.2.0",

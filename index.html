@@ -10,9 +10,14 @@
 
     <section class="top">
         <h1>Snip</h1>
-        <div>
-            <button class="btn-save">Update</button>
-            <button class="btn-save" data-permanent="true">Save</button>
+        <div class="menu-switcher">
+            <div class="menu-guest">
+                <button class="btn toggle" data-target="#signin-form">Sign in</button>
+            </div>
+            <div class="menu-authed">
+                <button class="btn-save">Update</button>
+                <button class="btn-save" data-permanent="true">Save</button>
+            </div>
         </div>
     </section>
     
@@ -35,6 +40,14 @@
         </div>
 
     </section>
+
+    <form id="signin-form">
+        <input type="text" placeholder="Username" id="signin-username">
+        <input type="text" placeholder="Password" id="signin-password">
+        <p><input type="checkbox" id="signin-permanent"><label for="signin-permanent">Permanent</label></p>
+        <button class="btn-sign-in">Sign in</button>
+        <button class="toggle" data-target="#signin-form">Cancel</button>
+    </form> 
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.2/ace.js"></script>
     

@@ -30,18 +30,20 @@ html, body {
         text-shadow: -2px 2px 2px $color-dark;
     }
 
-    button {
-        -webkit-appearance: none;
-        background-color: $color-dark;
-        color: #ccc;
-        padding: 0 20px;
-        border: none;
-        height: 30px;
-        font-weight: normal;
-
-        &:hover {
-            box-shadow: 0 0 10px $color-dark;
-            color: white;
+    .menu-switcher {
+        .menu-authed {
+            display: none;
+        }
+        .menu-guest {
+            display: block;
+        }
+    }
+    .menu-switcher.authed {
+        .menu-authed {
+            display: block;
+        }
+        .menu-guest {
+            display: none;
         }
     }
 }
@@ -62,5 +64,71 @@ html, body {
     .editor {
         font-size: 15px;
         font-family: $font-monospace;
+    }
+}
+
+#signin-form {
+    display: none;
+    position: absolute;
+    width: 400px;
+    left: 50%;
+    margin-left: -200px;
+    top: 30%;
+    padding: 20px;
+    z-index: 999;
+    background-color: $color-bg;
+    
+    input[type=text] {
+        width: 380px;
+        border: none;
+        padding: 10px 0;
+        background-color: transparent;
+        color: white;
+        border-bottom: 1px solid white;
+    }
+
+    input[type=checkbox] {
+        display: none;
+
+        & ~ label {
+            &:before {
+                content: '';
+                display: inline-block;
+                height: 15px;
+                line-height: 15px;
+                width: 15px;
+                background-color: white;
+                margin-right: 10px;
+                vertical-align: middle;
+                color: $color-dark;
+                text-align: center;
+                font-size: 15px;
+                border-radius: 50%;
+                border: 2px white solid;
+            }
+            
+            color: white;
+        }
+        
+        &:checked ~ label:before {
+            // content: '\2716';
+            background-color: $color-dark;
+        }
+    }
+}
+
+button {
+    -webkit-appearance: none;
+    background-color: $color-dark;
+    color: $color-fg;
+    padding: 0 20px;
+    border: none;
+    height: 30px;
+    font-weight: normal;
+    transition: color 0.2s, box-shadow 0.2s;
+
+    &:hover {
+        box-shadow: 0 0 10px $color-dark;
+        color: white;
     }
 }
