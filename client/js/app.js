@@ -34,7 +34,12 @@ $.on('.btn-save', 'click', el => {
         data[i] = editors[i].session.getValue();
     });
     
-    Action.save(data);
+    Action.save(data, res => {
+        if (res.responseJSON.push) {
+            history.pushState({ id: res.responseJSON.id }, null, '#/' + res.responseJSON.id);
+        }
+        document.getElementById('editor-preview').src = backend + '/render/' + res.responseJSON.id;
+    });
 });
 
 /**
@@ -44,9 +49,14 @@ if (location.hash) {
     let id = location.hash.match(/#\/(\w{7})/)[1];
     
     Action.load(id, res => {
-        types.forEach(i => {
-            editors[i].session.setValue(res.responseJSON[i]);
-        });
-        document.getElementById('editor-preview').src = backend + '/render/' + id;
+        if (res.responseJSON && res.responseJSON.success) {
+            types.forEach(i => {
+                editors[i].session.setValue(res.responseJSON[i]);
+            });
+            document.getElementById('editor-preview').src = backend + '/render/' + id;
+        }
+        else {
+            alert('Error\n\nCouldn\'t load snip\n\n' + res.responseJSON.error);
+        }
     });
 }

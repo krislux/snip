@@ -4,7 +4,7 @@
 import ajax from './lib/ajax.js';
 
 export default class Action {
-    static save(data) {
+    static save(data, callback) {
         ajax({
             url: backend + '/save',
             contentType: 'application/json',
@@ -12,7 +12,7 @@ export default class Action {
             data: data
         }).then(res => {
             if (res.responseJSON && res.responseJSON.success) {
-                history.pushState({ id: res.responseJSON.id }, null, '#/' + res.responseJSON.id);
+                callback(res);
             }
             else {
                 alert('Something went wrong.');

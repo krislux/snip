@@ -20,7 +20,7 @@ stdin.addListener('data', data => {
         try {
             fs.mkdirSync(process.env.DB_DIR, {
                 recursive: true,
-                mode: 0o744
+                mode: 0o740
             });
         } catch (exc) { /* we don't care if it exists. */ }
 
@@ -32,7 +32,8 @@ stdin.addListener('data', data => {
                     id BINARY CHAR(7) PRIMARY KEY,
                     html TEXT,
                     css TEXT,
-                    javascript TEXT
+                    javascript TEXT,
+                    permanent TINYINT
                 )`, err => {
                     if (err === null) {
                         console.log('Done. Database reset.');

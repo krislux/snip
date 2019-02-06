@@ -19,11 +19,17 @@ app.get('/get/:id', async (req, res) => {
     db.open().then(db => {
         let stmt = db.prepare('SELECT * FROM snips WHERE id=?');
         stmt.get(req.params.id, (err, row) => {
-            res.send({
-                html: row.html,
-                css: row.css,
-                javascript: row.javascript
-            });
+            if (err || ! row) {
+                res.send({ success: false, error: err });
+            }
+            else {
+                res.send({
+                    success: true,
+                    html: row.html,
+                    css: row.css,
+                    javascript: row.javascript
+                });
+            }
         });
     });
 });
@@ -64,18 +70,20 @@ app.post('/save/:id?', async (req, res) => {
     db.open().then(db => {
         let id = randomstring.generate(7);
 
-        let stmt = db.prepare('INSERT INTO snips (id, html, css, javascript) VALUES (?, ?, ?, ?)');
+        let stmt = db.prepare('INSERT INTO snips (id, html, css, javascript, permanent) VALUES (?, ?, ?, ?, ?)');
         stmt.run(
             id,
             req.body.html,
             req.body.css,
-            req.body.javascript
+            req.body.javascript,
+            req.body.permanent ? 1 : 0
         );
         stmt.finalize(err => {
             res.setHeader('Content-Type', 'application/json');
             res.send({
                 success: !err,
-                id: id
+                id: id,
+                push: !!req.body.permanent
             });
         });
     });
