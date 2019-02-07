@@ -10,6 +10,8 @@ html, body {
     overflow: hidden;
     font-family: sans-serif;
     font-size: 14px;
+
+    background-color: $color-editor-bg;
 }
 
 .top {
@@ -28,7 +30,6 @@ html, body {
         margin: 0;
         font-size: 26px;
         display: inline-block;
-        // text-shadow: -2px 2px 2px $color-dark;
     }
 
     .menu-switcher {
@@ -84,6 +85,11 @@ html, body {
         font-size: 15px;
         font-family: $font-monospace;
     }
+
+    iframe {
+        background-color: $color-editor-bg;
+        color: $color-editor-fg;
+    }
 }
 
 #signin-form {
@@ -120,7 +126,7 @@ html, body {
                 background-color: white;
                 margin-right: 10px;
                 vertical-align: middle;
-                color: $color-dark;
+                color: $color-face;
                 text-align: center;
                 font-size: 15px;
                 border-radius: 50%;
@@ -132,25 +138,25 @@ html, body {
 
         &:checked ~ label:before {
             // content: '\2716';
-            background-color: $color-dark;
+            background-color: $color-face;
         }
     }
 }
 
 button {
     -webkit-appearance: none;
-    background-color: $color-dark;
+    background-color: $color-face;
     color: $color-fg;
     padding: 0 20px;
-    border: none;
+    border: 1px transparent solid;
     border-radius: 2px;
     height: 30px;
     font-weight: normal;
-    transition: color 0.2s, box-shadow 0.2s;
+    transition: color 0.2s, border-color 0.2s;
     cursor: pointer;
 
     &:hover {
-        box-shadow: 0 0 10px $color-dark;
+        border-color: $color-highlight;
         color: white;
     }
 }

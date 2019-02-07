@@ -51,7 +51,7 @@ $.on('#signin-form', 'submit', event => {
     let password = document.getElementById('signin-password').value;
     let persistent = document.getElementById('signin-persistent').value == 'on';
     
-    console.log(persistent);
+    
 });
 
 $.on('.tab-container button', 'click', event => {
