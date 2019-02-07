@@ -26,19 +26,33 @@ stdin.addListener('data', data => {
 
         db.open().then(db => {
             db.serialize(() => {
+                // Users table
                 db.run('DROP TABLE IF EXISTS users');
 
                 db.run(`CREATE TABLE users (
-                    username CHAR(60),
+                    username CHAR(60) PRIMARY KEY,
                     password CHAR(60),
-                    created_at DATETIME,
-                    CONSTRAINT unique_username UNIQUE (username)
+                    created_at DATETIME
                 )`, err => {
                     if (err !== null) {
                         console.log('Could not create users table.', err);
                     }
                 });
 
+                // User login tokens table
+                db.run('DROP TABLE IF EXISTS tokens');
+
+                db.run(`CREATE TABLE tokens (
+                    token CHAR(60) PRIMARY KEY,
+                    username CHAR(60),
+                    created_at DATETIME
+                )`, err => {
+                    if (err !== null) {
+                        console.log('Could not create tokens table.', err);
+                    }
+                });
+
+                // Snips table
                 db.run('DROP TABLE IF EXISTS snips');
 
                 db.run(`CREATE TABLE snips (
@@ -46,6 +60,7 @@ stdin.addListener('data', data => {
                     html TEXT,
                     css TEXT,
                     javascript TEXT,
+                    view CHAR(6),
                     permanent TINYINT
                 )`, err => {
                     if (err === null) {

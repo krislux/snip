@@ -17,8 +17,9 @@ app.get('/get/:id', async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
     db.open().then(db => {
-        let stmt = db.prepare('SELECT * FROM snips WHERE id=?');
-        stmt.get(req.params.id, (err, row) => {
+        db.get('SELECT * FROM snips WHERE id=?', [
+            req.params.id
+        ], (err, row) => {
             if (err || ! row) {
                 res.send({ success: false, error: err });
             }
@@ -27,7 +28,8 @@ app.get('/get/:id', async (req, res) => {
                     success: true,
                     html: row.html,
                     css: row.css,
-                    javascript: row.javascript
+                    javascript: row.javascript,
+                    view: row.view
                 });
             }
         });
@@ -42,8 +44,9 @@ app.get('/render/:id', async(req, res) => {
     res.setHeader('Content-Type', 'text/html');
 
     db.open().then(db => {
-        let stmt = db.prepare('SELECT * FROM snips WHERE id=?');
-        stmt.get(req.params.id, (err, row) => {
+        db.get('SELECT * FROM snips WHERE id=?', [
+            req.params.id
+        ], (err, row) => {
             if (err)
                 res.end('Error');
 
@@ -70,21 +73,69 @@ app.post('/save/:id?', async (req, res) => {
     db.open().then(db => {
         let id = randomstring.generate(7);
 
-        let stmt = db.prepare('INSERT INTO snips (id, html, css, javascript, permanent) VALUES (?, ?, ?, ?, ?)');
-        stmt.run(
+        db.run('INSERT INTO snips (id, html, css, javascript, view, permanent) VALUES (?, ?, ?, ?, ?, ?)', [
             id,
             req.body.html,
             req.body.css,
             req.body.javascript,
+            req.body.view,
             req.body.permanent ? 1 : 0
-        );
-        stmt.finalize(err => {
+        ], err => {
             res.setHeader('Content-Type', 'application/json');
             res.send({
                 success: !err,
                 id: id,
                 push: !!req.body.permanent
             });
+        });
+    });
+});
+
+app.post('/login', async (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+
+    db.open().then(db => {
+        // db.run('DELETE FROM tokens WHERE created_at < DATETIME(\'now\', \'-30 day\')');
+
+        let stmt = db.prepare('SELECT * FROM users WHERE username=?');
+        stmt.get(req.params.username, (err, row) => {
+            if ( ! err && row) {
+                require('bcrypt').compare(req.params.password, row.password, (err, res) => {
+                    if ( ! err && res === true) {
+                        let token = randomstring.generate(60);
+
+                        db.run('INSERT INTO tokens (token, username, created_at) (?, ?, DATETIME(\'now\'))', [
+                            token,
+                            req.params.username,
+                        ], err => {
+                            if ( ! err) {
+                                res.send({
+                                    success: true,
+                                    token: token
+                                });
+                            }
+                            else {
+                                res.send({
+                                    success: false,
+                                    error: 'Could not create token'
+                                });
+                            }
+                        });
+                    }
+                    else {
+                        res.send({
+                            success: false,
+                            error: 'Incorrect password'
+                        });
+                    }
+                });
+            }
+            else {
+                res.send({
+                    success: false,
+                    error: 'User not found'
+                });
+            }
         });
     });
 });

@@ -22,6 +22,8 @@ rules:
     - warn
   no-unused-expressions:
     - warn
+  no-empty:
+    - warn
   eol-last:
     - error
     - always

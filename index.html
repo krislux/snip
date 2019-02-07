@@ -9,7 +9,22 @@
 <body class="grid">
 
     <section class="top">
-        <h1>Snip</h1>
+        <div>
+            <h1>Snip</h1>
+
+            <nav class="layout-switcher">
+                <button value="grid">Grid</button>
+                <button value="tabbed">Tabs</button>
+            </nav>
+        </div>
+
+        <nav class="tab-container">
+            <button class="tab" value="html">HTML</button>
+            <button class="tab" value="css">CSS</button>
+            <button class="tab" value="javascript">JS</button>
+            <button class="tab active" value="preview">Preview</button>
+        </nav>
+
         <div class="menu-switcher">
             <div class="menu-guest">
                 <button class="btn toggle" data-target="#signin-form">Sign in</button>
@@ -20,9 +35,9 @@
             </div>
         </div>
     </section>
-    
+
     <section class="editors tabbed">
-        
+
         <div class="editor-container html">
             <div class="editor" id="editor-html"></div>
         </div>
@@ -35,22 +50,22 @@
             <div class="editor" id="editor-javascript"></div>
         </div>
 
-        <div class="editor-container javascript">
+        <div class="editor-container preview">
             <iframe id="editor-preview" src="about:blank" frameborder="0"></iframe>
         </div>
 
     </section>
 
     <form id="signin-form">
-        <input type="text" placeholder="Username" id="signin-username">
-        <input type="text" placeholder="Password" id="signin-password">
-        <p><input type="checkbox" id="signin-permanent"><label for="signin-permanent">Permanent</label></p>
-        <button class="btn-sign-in">Sign in</button>
-        <button class="toggle" data-target="#signin-form">Cancel</button>
-    </form> 
-    
+        <input type="text"     placeholder="Username" id="signin-username">
+        <input type="password" placeholder="Password" id="signin-password">
+        <p><input type="checkbox" id="signin-persistent"><label for="signin-persistent">Stay logged in</label></p>
+        <button type="submit">Sign in</button>
+        <button type="reset" class="toggle" data-target="#signin-form">Cancel</button>
+    </form>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.2/ace.js"></script>
-    
+
     <script src="dist/js/app.js"></script>
 </body>
 </html>

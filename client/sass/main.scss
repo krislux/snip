@@ -1,7 +1,7 @@
 @import 'lib/normalize';
+@import '_vars.scss';
 @import 'layouts/tabbed';
 @import 'layouts/grid';
-@import '_vars.scss';
 
 @import url('https://fonts.googleapis.com/css?family=Source+Code+Pro');
 
@@ -27,7 +27,8 @@ html, body {
         color: #ccc;
         margin: 0;
         font-size: 26px;
-        text-shadow: -2px 2px 2px $color-dark;
+        display: inline-block;
+        // text-shadow: -2px 2px 2px $color-dark;
     }
 
     .menu-switcher {
@@ -44,6 +45,24 @@ html, body {
         }
         .menu-guest {
             display: none;
+        }
+    }
+
+    .layout-switcher {
+        float: right;
+        margin-left: 10px;
+
+        button {
+            height: 15px;
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            padding: 0;
+            min-width: 40px;
+
+            &:first-child {
+                margin-bottom: 3px;
+            }
         }
     }
 }
@@ -77,11 +96,12 @@ html, body {
     padding: 20px;
     z-index: 999;
     background-color: $color-bg;
-    
-    input[type=text] {
-        width: 380px;
+
+    input[type=text], input[type=password] {
+        width: 100%;
         border: none;
-        padding: 10px 0;
+        padding: 5px 0;
+        margin: 5px 0;
         background-color: transparent;
         color: white;
         border-bottom: 1px solid white;
@@ -106,10 +126,10 @@ html, body {
                 border-radius: 50%;
                 border: 2px white solid;
             }
-            
+
             color: white;
         }
-        
+
         &:checked ~ label:before {
             // content: '\2716';
             background-color: $color-dark;
@@ -123,9 +143,11 @@ button {
     color: $color-fg;
     padding: 0 20px;
     border: none;
+    border-radius: 2px;
     height: 30px;
     font-weight: normal;
     transition: color 0.2s, box-shadow 0.2s;
+    cursor: pointer;
 
     &:hover {
         box-shadow: 0 0 10px $color-dark;

@@ -11,4 +11,11 @@ body.grid {
         }
     }
 
+    .tab-container {
+        display: none;
+    }
+
+    .layout-switcher button[value=grid] {
+        border-bottom: 2px $color-highlight solid;
+    }
 }

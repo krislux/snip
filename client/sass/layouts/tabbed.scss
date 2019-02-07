@@ -11,10 +11,30 @@ body.tabbed {
             right: 0;
             display: none;
 
-            &:last-child {
+            &.active {
                 display: block;
             }
         }
     }
 
+    .tab-container {
+        display: block;
+
+        button {
+            height: 35px;
+            margin-top: 5px;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            border-bottom: 4px transparent solid;
+            min-width: 80px;
+
+            &.active {
+                border-bottom: 4px $color-highlight solid;
+            }
+        }
+    }
+
+    .layout-switcher button[value=tabbed] {
+        border-bottom: 2px $color-highlight solid;
+    }
 }
