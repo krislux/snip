@@ -193,7 +193,7 @@ app.post('/login', async (req, res) => {
             else {
                 res.send({
                     success: false,
-                    error: 'User not found'
+                    error: 'User not found\n' + err
                 });
             }
         });
