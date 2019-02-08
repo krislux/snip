@@ -8,7 +8,7 @@
 
 /* eslint no-console: "off" */
 require('dotenv').config();
-const db = require('./inc/db.js');
+const db = require('../lib/db.js');
 
 console.log('Are you sure you wish to reset the project?\nThis will wipe the db. [NO/yes]');
 
@@ -44,7 +44,7 @@ stdin.addListener('data', data => {
 
                 db.run(`CREATE TABLE tokens (
                     token CHAR(60) PRIMARY KEY,
-                    username CHAR(60),
+                    user_id INTEGER,
                     created_at DATETIME
                 )`, err => {
                     if (err !== null) {
@@ -61,7 +61,9 @@ stdin.addListener('data', data => {
                     css TEXT,
                     javascript TEXT,
                     view CHAR(6),
-                    permanent TINYINT
+                    user_id INTEGER,
+                    created_at DATETIME,
+                    updated_at DATETIME DEFAULT NULL
                 )`, err => {
                     if (err === null) {
                         console.log('Done. Database reset.');

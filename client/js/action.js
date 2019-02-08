@@ -15,10 +15,23 @@ export default class Action {
                 callback(res);
             }
             else {
-                alert('Something went wrong.');
+                alert('Error\n\n' + res.responseJSON.error);
             }
         }).catch(err => {
             alert(err.toString() + '\n\nUnable to save. Please try again or report the issue.');
+        });
+    }
+
+    static preview(data, callback) {
+        ajax({
+            url: backend + '/preview',
+            contentType: 'application/json',
+            method: 'post',
+            data: data
+        }).then(res => {
+            callback(res);
+        }).catch(err => {
+            alert(err.toString() + '\n\nUnable to render. Please try again or report the issue.');
         });
     }
 
@@ -27,6 +40,21 @@ export default class Action {
             url: backend + '/get/' + id,
             contentType: 'application/json',
             method: 'get'
+        }).then(res => {
+            if (res.responseJSON) {
+                callback(res);
+            }
+        }).catch(err => {
+            alert(err.toString() + '\n\nCould not contact server. Please try again later.');
+        });
+    }
+
+    static login(options, callback) {
+        ajax({
+            url: backend + '/login',
+            contentType: 'application/json',
+            method: 'post',
+            data: options
         }).then(res => {
             if (res.responseJSON) {
                 callback(res);

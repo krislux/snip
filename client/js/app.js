@@ -23,37 +23,108 @@ types.forEach(type => {
 });
 
 /**
- * Save button(s) pressed
+ * Update button pressed, render preview without saving.
+ */
+$.on('.btn-preview', 'click', () => {
+    let data = {};
+    let length = 0;
+
+    types.forEach(i => {
+        data[i] = editors[i].session.getValue();
+        length += data[i].length;
+    });
+
+    let preview = document.getElementById('editor-preview');
+
+    if (length === 0) {
+        preview.src = 'data:text/html;';
+    }
+    else {
+        Action.preview(data, res => {
+            preview.src = 'data:text/html;charset=UTF-8,' + encodeURIComponent(res.response);
+        });
+    }
+});
+
+/**
+ * Save button(s) pressed, save content and push state.
  */
 $.on('.btn-save', 'click', event => {
-    // Perma-save (with visible id and pushState) as opposed to the invisible update.
-    let permanent = /^(yes|true|1|on)$/i.test(event.target.getAttribute('data-permanent'));
+    let id = null;
+    if (event.target.classList.contains('save-over')) {
+        id = $.getActiveId();
+    }
+
     let data = {
-        permanent: !!permanent,
-        view: document.body.className
+        token: $.getToken(),
+        view: document.body.className,
+        id: id
     };
     types.forEach(i => {
         data[i] = editors[i].session.getValue();
     });
-    
+
     Action.save(data, res => {
-        if (res.responseJSON.push) {
-            history.pushState({ id: res.responseJSON.id }, null, '#/' + res.responseJSON.id);
-        }
+        history.pushState({ id: res.responseJSON.id }, null, '#/' + res.responseJSON.id);
+
         document.getElementById('editor-preview').src = backend + '/render/' + res.responseJSON.id;
     });
 });
 
-$.on('#signin-form', 'submit', event => {
-    event.preventDefault();
-    
-    let username = document.getElementById('signin-username').value;
-    let password = document.getElementById('signin-password').value;
-    let persistent = document.getElementById('signin-persistent').value == 'on';
-    
-    
+/**
+ * Sign out by deleting all local tokens.
+ */
+$.on('.btn-signout', 'click', () => {
+    sessionStorage.removeItem('login_token');
+    localStorage.removeItem('login_token');
+
+    [].forEach.call(document.querySelectorAll('.menu-switcher'), el => {
+        el.classList.remove('authed');
+    });
 });
 
+/**
+ * Login - triggered by login form submission.
+ */
+$.on('#signin-form', 'submit', event => {
+    event.preventDefault();
+
+    // Remove existing tokens.
+    sessionStorage.removeItem('login_token');
+    localStorage.removeItem('login_token');
+
+    let options = {
+        username: document.getElementById('signin-username').value,
+        password: document.getElementById('signin-password').value,
+        persistent: document.getElementById('signin-persistent').value == 'on'
+    };
+
+    Action.login(options, res => {
+        if (res.responseJSON) {
+            if (res.responseJSON.success) {
+                if (res.responseJSON.persistent) {
+                    localStorage.setItem('login_token', res.responseJSON.token);
+                }
+                else {
+                    sessionStorage.setItem('login_token', res.responseJSON.token);
+                }
+
+                // Change the menu to reflect logged in status.
+                [].forEach.call(document.querySelectorAll('.menu-switcher'), el => {
+                    el.classList.add('authed');
+                });
+                document.getElementById('signin-form').style.display = 'none';
+            }
+            else {
+                alert(res.responseJSON.error);
+            }
+        }
+    });
+});
+
+/**
+ * Switching between tabs in tabbed layout.
+ */
 $.on('.tab-container button', 'click', event => {
     [].forEach.call(document.querySelectorAll('.tab-container button'), el => {
         let target = document.getElementById('editor-' + el.value).parentElement;
@@ -72,21 +143,35 @@ $.on('.tab-container button', 'click', event => {
     });
 });
 
+/**
+ * Button pressed to switch between grid and tab layout.
+ */
 $.on('.layout-switcher button', 'click', event => {
     document.body.classList.remove('grid', 'tabbed');
     document.body.classList.add(event.target.value);
+
+    types.forEach(i => {
+        editors[i].resize();
+    });
+});
+
+/**
+ * Always close drop-down menus when clicking any menu item.
+ */
+$.on('.drop-down button', 'click', event => {
+    event.target.parentElement.parentElement.style.display = 'none';
 });
 
 /**
  * Read existing data if location.hash set.
  */
 if (location.hash) {
-    let id = location.hash.match(/#\/(\w{7})/)[1];
-    
+    let id = $.getActiveId();
+
     Action.load(id, res => {
         if (res.responseJSON && res.responseJSON.success) {
             document.body.className = res.responseJSON.view;
-            
+
             types.forEach(i => {
                 editors[i].session.setValue(res.responseJSON[i]);
             });
@@ -95,5 +180,14 @@ if (location.hash) {
         else {
             alert('Error\n\nCouldn\'t load snip\n\n' + res.responseJSON.error);
         }
+    });
+}
+
+/**
+ * If login token exists, set menu to logged in state immediately.
+ */
+if ($.getToken()) {
+    [].forEach.call(document.querySelectorAll('.menu-switcher'), el => {
+        el.classList.add('authed');
     });
 }

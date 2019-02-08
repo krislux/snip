@@ -3,12 +3,13 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const randomstring = require('randomstring');
-const fs = require('fs');
-const db = require('./inc/db.js');
+const db = require('./lib/db.js');
+const Snip = require('./snip.js');
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json({ type: 'application/json' }));
+
 
 /**
  * Return data from specific snip set by :id as JSON
@@ -47,46 +48,106 @@ app.get('/render/:id', async(req, res) => {
         db.get('SELECT * FROM snips WHERE id=?', [
             req.params.id
         ], (err, row) => {
-            if (err)
-                res.end('Error');
-
-            fs.readFile('backend/template.html', (err, data) => {
-                let html = data.toString();
-                if ( ! err) {
-                    html = html.replace('#html#', row.html);
-                    html = html.replace('#css#', row.css);
-                    html = html.replace('#javascript#', row.javascript);
-
-                    res.end(html);
-                }
+            if (err) {
+                res.send({
+                    success: false,
+                    error: err
+                });
+                res.end();
+            }
+            Snip.render(row.html, row.css, row.javascript, output => {
+                res.send(output);
             });
         });
     });
 });
 
 /**
- * Save new snip, or update existing if :id provided.
+ * Similar to /get, but returns a rendered HTML page for pr eview
+ * from a specific snip :id instead of JSON data.
  */
-app.post('/save/:id?', async (req, res) => {
-    // if (req.params.id)
+app.post('/preview', async(req, res) => {
+    res.setHeader('Content-Type', 'text/html');
+
+    Snip.render(
+        req.body.html,
+        req.body.css,
+        req.body.javascript,
+        output => {
+            res.send(output);
+        }
+    );
+});
+
+/**
+ * Save new snip, or update existing if req.body.id provided.
+ */
+app.post('/save', async (req, res) => {
+    let snip_id = (req.body.id && req.body.id.length === 7) ? req.body.id : null;
 
     db.open().then(db => {
-        let id = randomstring.generate(7);
 
-        db.run('INSERT INTO snips (id, html, css, javascript, view, permanent) VALUES (?, ?, ?, ?, ?, ?)', [
-            id,
-            req.body.html,
-            req.body.css,
-            req.body.javascript,
-            req.body.view,
-            req.body.permanent ? 1 : 0
-        ], err => {
-            res.setHeader('Content-Type', 'application/json');
-            res.send({
-                success: !err,
-                id: id,
-                push: !!req.body.permanent
-            });
+        db.get('SELECT users.rowid as id, username FROM users JOIN tokens ON tokens.user_id=users.rowid WHERE tokens.token=?', [
+            req.body.token
+        ], (err, user) => {
+            if (err || ! user.id) {
+                res.send({
+                    success: false,
+                    error: err
+                });
+                res.end();
+            }
+
+            // Delete old login tokens. This is run too often here, should be moved to cronjob.
+            db.run('DELETE FROM tokens WHERE created_at < DATETIME(\'now\', \'-30 day\')');
+
+            if (snip_id) {
+                // Overwrite save
+                db.run('UPDATE snips SET html=?, css=?, javascript=?, view=?, updated_at=DATETIME(\'now\') WHERE id=? AND user_id=?', [
+                    req.body.html,
+                    req.body.css,
+                    req.body.javascript,
+                    req.body.view,
+                    snip_id,
+                    user.id
+                ], function(err) {
+                    res.setHeader('Content-Type', 'application/json');
+                    if (this.changes === 0) {
+                        res.send({
+                            success: false,
+                            error: 'No rows updated, likely user didn\'t own snip',
+                            id: snip_id
+                        });
+                    }
+                    else {
+                        res.send({
+                            success: !err,
+                            error: err,
+                            id: snip_id
+                        });
+                    }
+                });
+            }
+            else {
+                // New save
+                snip_id = randomstring.generate(7);
+
+                db.run('INSERT INTO snips (id, html, css, javascript, view, user_id, created_at) VALUES (?, ?, ?, ?, ?, ?, DATETIME(\'now\'))', [
+                    snip_id,
+                    req.body.html,
+                    req.body.css,
+                    req.body.javascript,
+                    req.body.view,
+                    user.id
+                ], err => {
+                    res.setHeader('Content-Type', 'application/json');
+                    res.send({
+                        success: !err,
+                        error: err,
+                        id: snip_id
+                    });
+                });
+            }
         });
     });
 });
@@ -95,18 +156,17 @@ app.post('/login', async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
 
     db.open().then(db => {
-        // db.run('DELETE FROM tokens WHERE created_at < DATETIME(\'now\', \'-30 day\')');
-
-        let stmt = db.prepare('SELECT * FROM users WHERE username=?');
-        stmt.get(req.params.username, (err, row) => {
+        db.get('SELECT *, rowid as id FROM users WHERE username=?', [
+            req.body.username
+        ], (err, row) => {
             if ( ! err && row) {
-                require('bcrypt').compare(req.params.password, row.password, (err, res) => {
-                    if ( ! err && res === true) {
+                require('bcrypt').compare(req.body.password, row.password, (err, result) => {
+                    if ( ! err && result === true) {
                         let token = randomstring.generate(60);
 
-                        db.run('INSERT INTO tokens (token, username, created_at) (?, ?, DATETIME(\'now\'))', [
+                        db.run('INSERT INTO tokens (token, user_id, created_at) VALUES (?, ?, DATETIME(\'now\'))', [
                             token,
-                            req.params.username,
+                            row.id,
                         ], err => {
                             if ( ! err) {
                                 res.send({
@@ -117,7 +177,7 @@ app.post('/login', async (req, res) => {
                             else {
                                 res.send({
                                     success: false,
-                                    error: 'Could not create token'
+                                    error: 'Could not create token' + err
                                 });
                             }
                         });

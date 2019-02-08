@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title></title>
+    <title>Snip code sharer</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0" />
     <link type="text/css" rel="stylesheet" href="dist/css/app.css">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body class="grid">
 
@@ -27,11 +28,21 @@
 
         <div class="menu-switcher">
             <div class="menu-guest">
-                <button class="btn toggle" data-target="#signin-form">Sign in</button>
+                <button class="btn-preview">Update</button>
+                <button class="btn toggle narrow" data-target="#menu-guest">&#9776;</button>
+                <menu class="drop-down" id="menu-guest">
+                    <li><button class="btn toggle" data-target="#signin-form">Sign in to save</button></li>
+                    <li><button class="btn toggle" data-target="#about-box">About&hellip;</button></li>
+                </menu>
             </div>
             <div class="menu-authed">
-                <button class="btn-save">Update</button>
-                <button class="btn-save" data-permanent="true">Save</button>
+                <button class="btn-preview">Update</button>
+                <button class="btn toggle narrow" data-target="#main-menu-authed">&#9776;</button>
+                <menu class="drop-down" id="main-menu-authed">
+                    <li><button class="btn-save save-over">Save over</button></li>
+                    <li><button class="btn-save save-new">Save as new</button></li>
+                    <li><button class="btn-signout">Sign out</button></li>
+                </menu>
             </div>
         </div>
     </section>
@@ -50,7 +61,7 @@
             <div class="editor" id="editor-javascript"></div>
         </div>
 
-        <div class="editor-container preview">
+        <div class="editor-container preview active">
             <iframe id="editor-preview" src="about:blank" frameborder="0"></iframe>
         </div>
 
@@ -64,8 +75,28 @@
         <button type="reset" class="toggle" data-target="#signin-form">Cancel</button>
     </form>
 
+    <div id="about-box">
+        <h1><span>Snip</span> code sharer</h1>
+
+        <p>
+            &copy; Kris Lux
+        </p>
+        <p>
+            <a href="https://github.com/krislux" target="_blank">github.com/krislux</a>
+        </p>
+
+        <p class="extra-margin">
+            Uses <a href="https://ace.c9.io/" target="_blank">Ace code editor</a>
+        </p>
+
+        <div class="extra-margin">
+            <button class="btn toggle" data-target="#about-box">Close</button>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.2/ace.js"></script>
 
     <script src="dist/js/app.js"></script>
+
 </body>
 </html>

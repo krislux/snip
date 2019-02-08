@@ -5,6 +5,15 @@ export default class $ {
             el.addEventListener(event, callback);
         });
     }
+
+    static getActiveId() {
+        let m = location.hash.match(/#\/(\w{7})/);
+        return (m && m[1]) ? m[1] : null;
+    }
+
+    static getToken() {
+        return localStorage.getItem('login_token') || sessionStorage.getItem('login_token')
+    }
 }
 
 $.on('.toggle', 'click', event => {

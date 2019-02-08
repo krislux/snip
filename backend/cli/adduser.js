@@ -8,7 +8,7 @@
 
 /* eslint no-console: "off" */
 require('dotenv').config();
-const db = require('./inc/db.js');
+const db = require('../lib/db.js');
 const bcrypt = require('bcrypt');
 
 const readline = require('readline');
