@@ -12,7 +12,7 @@ export default class $ {
     }
 
     static getToken() {
-        return localStorage.getItem('login_token') || sessionStorage.getItem('login_token')
+        return localStorage.getItem('login_token') || sessionStorage.getItem('login_token');
     }
 }
 
