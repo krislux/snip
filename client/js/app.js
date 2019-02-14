@@ -96,14 +96,14 @@ $.on('#signin-form', 'submit', event => {
 
     let options = {
         username: document.getElementById('signin-username').value,
-        password: document.getElementById('signin-password').value,
-        persistent: document.getElementById('signin-persistent').value == 'on'
+        password: document.getElementById('signin-password').value
     };
+    let persistent = document.getElementById('signin-persistent').value == 'on';
 
     Action.login(options, res => {
         if (res.responseJSON) {
             if (res.responseJSON.success) {
-                if (res.responseJSON.persistent) {
+                if (persistent) {
                     localStorage.setItem('login_token', res.responseJSON.token);
                 }
                 else {
