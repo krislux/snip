@@ -7,7 +7,7 @@ import Action from './action.js';
 import $ from './helpers.js';
 
 window.editors = {};
-window.backend = 'http://' + location.host + ':8222';
+window.backend = 'http://' + location.hostname + ':8222';
 
 let types = ['html', 'css', 'javascript'];
 
@@ -17,7 +17,8 @@ let types = ['html', 'css', 'javascript'];
 types.forEach(type => {
     let editor = ace.edit('editor-' + type, {
         theme: 'ace/theme/monokai',
-        mode: 'ace/mode/' + type
+        mode: 'ace/mode/' + type,
+        showPrintMargin: false
     });
     editors[type] = editor;
 });

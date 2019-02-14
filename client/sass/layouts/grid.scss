@@ -8,6 +8,14 @@ body.grid {
         .editor-container {
             height: 50%;
             width: 50%;
+            box-sizing: border-box;
+
+            &:nth-of-type(-n+2) {
+                border-bottom: 1px $color-face solid;
+            }
+            &:nth-of-type(2n+1) {
+                border-right: 1px $color-face solid;
+            }
         }
     }
 

@@ -4,8 +4,9 @@ $color-fg: #ddd;
 $color-face: #444;
 $color-highlight: #c16;
 
-$color-editor-bg: white;
-$color-editor-fg: black;
+// Go with the brower's default colours for the iframe.
+$color-editor-bg: initial;
+$color-editor-fg: initial;
 
 // Fonts
 $font-monospace: 'Source Code Pro', 'Monaco', 'Consolas', monospace;
