@@ -13,7 +13,7 @@
     "dev-start": "php -S localhost:8000 &\nnpm run watch &\nnodemon"
   },
   "author": "Kris Lux <mail@kilolima.dk>",
-  "license": "proprietary",
+  "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.24.0",
     "babel-loader": "^7.x",
