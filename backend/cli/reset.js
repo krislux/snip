@@ -20,7 +20,7 @@ stdin.addListener('data', data => {
         try {
             fs.mkdirSync(process.env.DB_DIR, {
                 recursive: true,
-                mode: 0o740
+                mode: 0o660
             });
         } catch (exc) { /* we don't care if it exists. */ }
 
