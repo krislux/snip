@@ -40,3 +40,7 @@ This assumes you have webpack and nodemon installed globally, as well as an inst
 Of those only webpack is required, but can be installed locally if you prefer.
 
 In that case, leave out `dev-start` and manually run webpack and set up a server to serve static files.
+
+### License
+
+[MIT](https://opensource.org/licenses/MIT)
