@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const http = require('http');
 const bodyParser = require('body-parser');
 const randomstring = require('randomstring');
 const db = require('./lib/db.js');
@@ -201,4 +202,22 @@ app.post('/login', async (req, res) => {
     });
 });
 
-app.listen(process.env.PORT);
+if (process.env.HTTPS) {
+    const https = require('https');
+    const fs = require('fs');
+    
+    https.createServer({
+        key: fs.readFileSync(process.env.SSL_KEY || 'server.key'),
+        cert: fs.readFileSync(process.env.SSL_CERT || 'server.cert')
+    }, app).listen(443);
+
+    // Redirect everything to https
+    http.createServer()
+    http.createServer(function (req, res) {
+        res.writeHead(301, { "Location": "https://" + req.headers.host + req.url });
+        res.end();
+    }).listen(80);
+}
+else {
+    http.createServer({}, app).listen(80);
+}

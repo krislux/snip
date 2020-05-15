@@ -35,6 +35,19 @@ nodemon
 
 This assumes you have webpack and nodemon installed globally.
 
+### Environment variables
+
+No `.env` file is required, as the app comes with sensible defaults, the possible exception being HTTPS which defaults to false (HTTP only)  
+However you can create one if you want to override any of the following default values
+
+```
+HTTPS=
+DB_DIR=data
+DB_FILE=db.sqlite
+SSL_KEY=server.key
+SSL_CERT=server.cert
+```
+
 ### License
 
 [MIT](https://opensource.org/licenses/MIT)

@@ -18,7 +18,7 @@ stdin.addListener('data', data => {
         
         let fs = require('fs');
         try {
-            fs.mkdirSync(process.env.DB_DIR, {
+            fs.mkdirSync(process.env.DB_DIR || 'data', {
                 recursive: true,
                 mode: 0o660
             });
