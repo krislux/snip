@@ -48,6 +48,8 @@ SSL_KEY=server.key
 SSL_CERT=server.cert
 ```
 
+Add `NODE_TLS_REJECT_UNAUTHORIZED=0` to allow tests to work with self-signed certificate. DO NOT do this in production.
+
 ### License
 
 [MIT](https://opensource.org/licenses/MIT)
