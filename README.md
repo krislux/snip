@@ -13,10 +13,6 @@ inspiration or building upon, feel free.
 
 Please report any bugs or security issues via the contact form on kilolima.dk
 
-## Setup
-
-Project requires external web server to serve static files - or that functionality added in Node.
-
 ### Production
 
 ```
@@ -33,13 +29,11 @@ Then start the project with `npm start`, preferably with something like pm2.
 npm install
 npm run reset
 npm run adduser <username>
-npm run dev-start
+npm run watch
+nodemon
 ```
 
-This assumes you have webpack and nodemon installed globally, as well as an installation of PHP.
-Of those only webpack is required, but can be installed locally if you prefer.
-
-In that case, leave out `dev-start` and manually run webpack and set up a server to serve static files.
+This assumes you have webpack and nodemon installed globally.
 
 ### License
 

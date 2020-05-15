@@ -11,10 +11,10 @@ const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 module.exports = {
     mode: "development", // "production" | "development" | "none"
 
-    entry: path.resolve(__dirname, "client/js/app.js"),
+    entry: path.resolve(__dirname, "src/assets/js/app.js"),
 
     output: {
-        path: path.resolve(__dirname, "dist"),
+        path: path.resolve(__dirname, "public"),
         filename: "js/app.js"
     },
 
@@ -22,7 +22,7 @@ module.exports = {
         rules: [{
             test: /\.js$/,
             include: [
-                path.resolve(__dirname, "client/js")
+                path.resolve(__dirname, "src/assets/js")
             ],
             loader: "babel-loader",
             options: {

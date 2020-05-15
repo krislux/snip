@@ -10,6 +10,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json({ type: 'application/json' }));
 
+app.use(express.static('public'));
 
 /**
  * Return data from specific snip set by :id as JSON

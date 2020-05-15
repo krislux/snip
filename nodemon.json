@@ -1,4 +1,4 @@
 {
     "verbose": false,
-    "ignore": ["client/*", "dist/*"]
+    "ignore": ["public/*", "src/assets/*"]
 }

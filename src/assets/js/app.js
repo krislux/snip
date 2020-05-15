@@ -7,7 +7,7 @@ import Action from './action.js';
 import $ from './helpers.js';
 
 window.editors = {};
-window.backend = 'http://' + location.hostname + ':8222';
+window.backend = 'http://' + location.hostname;
 
 let types = ['html', 'css', 'javascript'];
 
