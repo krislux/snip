@@ -18,7 +18,8 @@ types.forEach(type => {
     let editor = ace.edit('editor-' + type, {
         theme: 'ace/theme/monokai',
         mode: 'ace/mode/' + type,
-        showPrintMargin: false
+        showPrintMargin: false,
+        tabSize: 2
     });
     editors[type] = editor;
 });
