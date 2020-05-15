@@ -219,5 +219,5 @@ if (process.env.HTTPS) {
     }).listen(80);
 }
 else {
-    http.createServer({}, app).listen(80);
+    http.createServer({}, app).listen(process.env.PORT || 80);
 }

@@ -42,6 +42,7 @@ However you can create one if you want to override any of the following default 
 
 ```
 HTTPS=
+PORT=
 DB_DIR=data
 DB_FILE=db.sqlite
 SSL_KEY=server.key
