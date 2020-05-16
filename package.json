@@ -12,6 +12,9 @@
     "prod": "webpack --mode=production",
     "test": "npx mocha"
   },
+  "pre-commit": [
+    "prod"
+  ],
   "author": "Kris Lux <mail@kilolima.dk>",
   "license": "MIT",
   "devDependencies": {
@@ -24,6 +27,7 @@
     "mocha": "^7.1.2",
     "node-sass": "^4.14.1",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "pre-commit": "^1.2.2",
     "sass-loader": "^8.0.2",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^4.43.0",

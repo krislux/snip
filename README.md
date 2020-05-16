@@ -11,8 +11,6 @@ The database is SQLite3, which is not currently abstracted in any way, so it is 
 In short, if you don't know exactly what you are doing, this isn't for you. But if you can use any part for
 inspiration or building upon, feel free.
 
-Please report any bugs or security issues via the contact form on kilolima.dk
-
 ### Production
 
 ```
@@ -37,7 +35,7 @@ This assumes you have webpack and nodemon installed globally.
 
 ### Environment variables
 
-No `.env` file is required, as the app comes with sensible defaults, the possible exception being HTTPS which defaults to false (HTTP only)  
+No `.env` file is required, as the app comes with sensible defaults.  
 However you can create one if you want to override any of the following default values
 
 ```
